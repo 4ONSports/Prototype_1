@@ -17,6 +17,7 @@ public class ChaserAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate (transform.rotation * Time.deltaTime * moveSpeed, Space.World);
+		//Kaue here, had to comment out, but transform.Translate takes a Vector3. transform.rotation is a Quaternion.
+		//transform.Translate (transform.rotation * Time.deltaTime * moveSpeed, Space.World);
 	}
 }

@@ -83,7 +83,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 594727599}
   - 33: {fileID: 594727598}
-  - 65: {fileID: 594727597}
   - 23: {fileID: 594727596}
   m_Layer: 0
   m_Name: Cube
@@ -112,18 +111,6 @@ Renderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!65 &594727597
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 594727595}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &594727598
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -236,9 +223,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 897143642}
   - 33: {fileID: 897143645}
-  - 136: {fileID: 897143644}
   - 23: {fileID: 897143643}
-  - 114: {fileID: 897143646}
+  - 143: {fileID: 897143646}
+  - 114: {fileID: 897143644}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -253,7 +240,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 897143641}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.00000048, z: 0}
+  m_LocalPosition: {x: 0, y: 2.17427778, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 594727599}
@@ -279,27 +266,7 @@ Renderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!136 &897143644
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 897143641}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: .5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &897143645
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 897143641}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &897143646
+--- !u!114 &897143644
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -310,6 +277,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a44153290f23cba419f6e27d10d44f27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runSpeed: 10
+  turnSpeed: 5
+--- !u!33 &897143645
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 897143641}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!143 &897143646
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 897143641}
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: .5
+  m_SlopeLimit: 45
+  m_StepOffset: .300000012
+  m_SkinWidth: .0799999982
+  m_MinMoveDistance: 0
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1105335162
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,8 +309,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 1105335166}
   - 33: {fileID: 1105335165}
-  - 64: {fileID: 1105335164}
   - 23: {fileID: 1105335163}
+  - 65: {fileID: 1105335164}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -348,8 +338,8 @@ Renderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!64 &1105335164
-MeshCollider:
+--- !u!65 &1105335164
+BoxCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -358,9 +348,8 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_SmoothSphereCollisions: 0
-  m_Convex: 0
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  m_Size: {x: 1, y: 1.00000048, z: 1}
+  m_Center: {x: 0, y: 0, z: .5}
 --- !u!33 &1105335165
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -376,7 +365,7 @@ Transform:
   m_GameObject: {fileID: 1105335162}
   m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
   m_LocalPosition: {x: 0, y: -3.00000048, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 100, y: 100, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -470,7 +459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6392d792ca5984e87c09bba011960b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pn: {fileID: 897143646}
+  pn: {fileID: 897143644}
 --- !u!4 &2135089007
 Transform:
   m_ObjectHideFlags: 0
