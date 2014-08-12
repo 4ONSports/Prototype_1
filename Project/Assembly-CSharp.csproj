@@ -48,8 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\GrantAssets\Scripts\ChaserAI.cs" />
      <Compile Include="Assets\GrantAssets\Scripts\FakePlayer.cs" />
-     <Compile Include="Assets\Movment\DragJoystick.cs" />
      <Compile Include="Assets\Movment\InputListener.cs" />
+     <Compile Include="Assets\Movment\MobileControl.cs" />
      <Compile Include="Assets\Movment\PlayerNavigation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
