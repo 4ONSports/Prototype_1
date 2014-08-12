@@ -5,11 +5,9 @@ public class DragJoystick : MonoBehaviour {
 
 	private Vector3 screenPoint = Vector3.zero;
 	private Vector3 offset;
-	private float _lockedYPosition;
 	[SerializeField] private Camera uiCamera = null;
 
 	void OnMouseDown() {
-		_lockedYPosition = screenPoint.y;
 		offset = gameObject.transform.position - uiCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));	
 	}
 
