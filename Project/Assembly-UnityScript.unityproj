@@ -5,11 +5,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{5B9FF267-005F-A3BF-219E-FEAE2D8C894F}</ProjectGuid>
+	<ProjectGuid>{C22FA9EE-EBFF-6669-DDA9-C1F27475A5F2}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
-	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<AssemblyName>Assembly-UnityScript</AssemblyName>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<FileAlignment>512</FileAlignment>
 	<BaseDirectory>Assets</BaseDirectory>
@@ -46,11 +46,27 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\GrantAssets\Scripts\ChaserAI.cs" />
-     <Compile Include="Assets\GrantAssets\Scripts\FakePlayer.cs" />
-     <Compile Include="Assets\Movment\DragJoystick.cs" />
-     <Compile Include="Assets\Movment\InputListener.cs" />
-     <Compile Include="Assets\Movment\PlayerNavigation.cs" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\CameraRelativeControl.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\FirstPersonControl.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\FollowTransform.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\Joystick.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\ObliqueNear.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\PlayerRelativeControl.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\RollABall.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\RotationConstraint.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\SidescrollControl.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\SmoothFollow2D.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\ZoomCamera.js" />
+     <Compile Include="Assets\Standard Assets (Mobile)\Scripts\tapcontrol.js" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Detail.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap Reflective.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Particles Additive Culled.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Vertex Colored.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap Only.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap AlphaTest.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
