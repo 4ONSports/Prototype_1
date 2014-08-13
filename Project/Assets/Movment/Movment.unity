@@ -531,7 +531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 10
-  turnSpeed: 5
+  turnSpeed: 10
 --- !u!33 &897143645
 MeshFilter:
   m_ObjectHideFlags: 0
