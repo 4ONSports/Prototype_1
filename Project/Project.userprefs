@@ -1,10 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Movment\InputListener.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GrantAssets\Scripts\MouseKick.cs">
     <Files>
-      <File FileName="Assets\Movment\InputListener.cs" Line="18" Column="19" />
-      <File FileName="Assets\Movment\PlayerNavigation.cs" Line="19" Column="3" />
-      <File FileName="Assets\Movment\MobileControl.cs" Line="11" Column="2" />
+      <File FileName="Assets\GrantAssets\Scripts\MouseKick.cs" Line="5" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
