@@ -21,6 +21,7 @@ public class InputListener : MonoBehaviour {
 		if (mc) {
 			if(fieldView == TypeOfFieldView.BACK_VIEW) MoveInput(mc.normal);
 			else MoveInput(new Vector2(mc.normal.y,-mc.normal.x));
+			if(Input.GetKeyDown(KeyCode.Space)) pn.Kick();
 		} else {
 			MoveInput (new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical")));
 		}

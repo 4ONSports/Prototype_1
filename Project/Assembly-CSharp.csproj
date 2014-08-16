@@ -54,9 +54,10 @@
      <Compile Include="Assets\Scripts\BallMovement\BallPoint.cs" />
      <Compile Include="Assets\Scripts\BallMovement\PlayerController.cs" />
      <Compile Include="Assets\Scripts\GameCamera.cs" />
-     <Compile Include="Assets\Scripts\InputListener.cs" />
-     <Compile Include="Assets\Scripts\MobileControl.cs" />
-     <Compile Include="Assets\Scripts\PlayerNavigation.cs" />
+     <Compile Include="Assets\Scripts\PlayerMovment\InputListener.cs" />
+     <Compile Include="Assets\Scripts\PlayerMovment\MobileControl.cs" />
+     <Compile Include="Assets\Scripts\PlayerMovment\PlayerNavigation.cs" />
+     <Compile Include="Assets\Scripts\SoccerBall.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

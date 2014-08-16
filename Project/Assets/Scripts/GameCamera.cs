@@ -8,6 +8,7 @@ public class GameCamera : MonoBehaviour {
 
 	[HideInInspector] public TypeOfFieldView fieldView = TypeOfFieldView.BACK_VIEW;
 
+	[SerializeField] private Transform debugTransform = null;
 	[SerializeField] private List<Transform> targetTransforms = null;
 	[SerializeField] private Vector3 offsetBack = new Vector3(0,7,-9);
 	[SerializeField] private Vector3 offsetSide = new Vector3(-14,7,0);
@@ -30,18 +31,19 @@ public class GameCamera : MonoBehaviour {
 	}
 
 
-	void Update () {
+	void LateUpdate () {
 		Vector3 mediumPoint = Vector3.zero;
 		Vector3 sum = Vector3.zero;
 		//TODO: Get rid of this if
 		if(targetTransforms.Count > 1) {
 			foreach (Transform t in targetTransforms) {
 				sum += t.transform.position;
-				mediumPoint = sum * 0.5f;
 			}
+			mediumPoint = sum * 0.5f;
 		} else {
 			mediumPoint = targetTransforms[0].transform.position;
 		}
-		transform.position = Vector3.MoveTowards (transform.position,mediumPoint  + offset,5f);
+		debugTransform.position = mediumPoint;
+		transform.position = Vector3.MoveTowards (transform.position,mediumPoint  + offset,10f* Time.deltaTime);
 	}
 }
