@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum DebugFeature {
-	DEBUG_CAMERA_MIDDLE_POINT,
+	DEBUG_CAMERA_MIDDLE_POINT
 }
 
 public class GameDebug : MonoBehaviour {
@@ -19,6 +19,4 @@ public class GameDebug : MonoBehaviour {
 	public static bool CheckIfActiveFeature(DebugFeature feature) {
 		return activeDebugFeatures [feature];
 	}
-
-
 }

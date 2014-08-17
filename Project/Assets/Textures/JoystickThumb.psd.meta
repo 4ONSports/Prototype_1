@@ -1,6 +1,8 @@
 fileFormatVersion: 2
 guid: ab5bb3eb247a4492fa9900f6ac0db050
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: JoystickThumb
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

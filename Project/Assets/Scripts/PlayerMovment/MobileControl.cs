@@ -15,7 +15,7 @@ public class MobileControl : MonoBehaviour {
 	public Vector3 normal;
 
 	void Start () {
-		if (Application.platform == RuntimePlatform.Android) {
+		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
 			useTouch = true;
 		}
 	}

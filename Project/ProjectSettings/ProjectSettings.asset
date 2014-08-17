@@ -64,7 +64,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  iPhoneBundleIdentifier: com.Test.TestTest
+  iPhoneBundleIdentifier: com.4onsports.halfsoccer
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0
   productGUID: 16c39cf026dae5544a0d8e3dd1ea06c6

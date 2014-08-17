@@ -35,7 +35,7 @@ public class BallController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		if (Application.platform == RuntimePlatform.Android) {
+		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
 			useTouch = true;
 		}
 		fieldView = Camera.main.GetComponent<GameCamera> ().fieldView;
