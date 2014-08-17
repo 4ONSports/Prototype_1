@@ -273,6 +273,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 37679f60989022a4a83f0060f4ba0e3f, type: 2}
+      propertyPath: m_Name
+      value: debug_camera_middle_point
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 37679f60989022a4a83f0060f4ba0e3f, type: 2}
   m_RootGameObject: {fileID: 905293037}
@@ -578,7 +582,11 @@ MonoBehaviour:
   - {fileID: 897143642}
   - {fileID: 878419218}
   offsetBack: {x: 0, y: 7, z: -9}
-  offsetSide: {x: -14, y: 7, z: 0}
+  offsetSide_Left: {x: -14, y: 7, z: 0}
+  offsetSide_Right: {x: 14, y: 7, z: 0}
+  back_View: {x: 30, y: 0, z: 0}
+  side_View_Left: {x: 30, y: 90, z: 0}
+  side_View_Right: {x: 30, y: -90, z: 0}
 --- !u!1 &878419213
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,8 +799,9 @@ GameObject:
   - 4: {fileID: 905293038}
   - 33: {fileID: 905293040}
   - 23: {fileID: 905293039}
+  - 114: {fileID: 905293041}
   m_Layer: 0
-  m_Name: debug
+  m_Name: debug_camera_middle_point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -839,6 +848,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 591500299}
   m_GameObject: {fileID: 905293037}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &905293041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 905293037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f6a8d4cc725649708f85bb58f3e5c2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myDebugFeature: 0
 --- !u!1 &967982517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1277,6 +1298,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2135089007}
   - 114: {fileID: 2135089006}
+  - 114: {fileID: 2135089008}
   m_Layer: 0
   m_Name: GameMatch
   m_TagString: Untagged
@@ -1312,3 +1334,15 @@ Transform:
   - {fileID: 643168518}
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!114 &2135089008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2135089005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b7acd2769f4549e98610caef2bc720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugCameraMiddlePoint: 1

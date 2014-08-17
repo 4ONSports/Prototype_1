@@ -51,7 +51,7 @@ public class GameCamera : MonoBehaviour {
 		} else {
 			mediumPoint = targetTransforms[0].transform.position;
 		}
-		debugTransform.position = mediumPoint;
+		if(GameDebug.CheckIfActiveFeature(DebugFeature.DEBUG_CAMERA_MIDDLE_POINT)) debugTransform.position = mediumPoint;
 		transform.position = Vector3.MoveTowards (transform.position,mediumPoint  + offset,10f* Time.deltaTime);
 	}
 }
