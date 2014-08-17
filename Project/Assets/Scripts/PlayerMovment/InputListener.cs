@@ -3,7 +3,8 @@ using System.Collections;
 
 public enum TypeOfFieldView{
 	BACK_VIEW,
-	SIDE_VIEW
+	SIDE_VIEW_LEFT,
+	SIDE_VIEW_RIGHT,
 }
 
 public class InputListener : MonoBehaviour {
@@ -19,8 +20,19 @@ public class InputListener : MonoBehaviour {
 	
 	void Update () {
 		if (mc) {
-			if(fieldView == TypeOfFieldView.BACK_VIEW) MoveInput(mc.normal);
-			else MoveInput(new Vector2(mc.normal.y,-mc.normal.x));
+			switch (fieldView)
+			{
+			case TypeOfFieldView.BACK_VIEW :
+				MoveInput(mc.normal);
+				break;
+			case TypeOfFieldView.SIDE_VIEW_LEFT :
+				MoveInput(new Vector2(mc.normal.y, -mc.normal.x));
+				break;
+			case TypeOfFieldView.SIDE_VIEW_RIGHT :
+				MoveInput(new Vector2(-mc.normal.y, mc.normal.x));
+				break;
+			}
+
 			if(Input.GetKeyDown(KeyCode.Space)) pn.Kick();
 		} else {
 			MoveInput (new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical")));

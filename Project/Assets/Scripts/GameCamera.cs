@@ -11,7 +11,11 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private Transform debugTransform = null;
 	[SerializeField] private List<Transform> targetTransforms = null;
 	[SerializeField] private Vector3 offsetBack = new Vector3(0,7,-9);
-	[SerializeField] private Vector3 offsetSide = new Vector3(-14,7,0);
+	[SerializeField] private Vector3 offsetSide_Left = new Vector3(-14,7,0);
+	[SerializeField] private Vector3 offsetSide_Right = new Vector3(14,7,0);
+	[SerializeField] private Vector3 back_View = new Vector3(30,0,0);
+	[SerializeField] private Vector3 side_View_Left = new Vector3(30,90,0);
+	[SerializeField] private Vector3 side_View_Right = new Vector3(30,-90,0);
 
 	private Vector3 offset;
 
@@ -21,11 +25,15 @@ public class GameCamera : MonoBehaviour {
 		switch(fieldView) {
 		case TypeOfFieldView.BACK_VIEW:
 			offset = offsetBack;
-			transform.rotation = Quaternion.Euler(30,0,0);
+			transform.rotation = Quaternion.Euler(back_View.x, back_View.y, back_View.z);
 			break;
-		case TypeOfFieldView.SIDE_VIEW:
-			offset = offsetSide;
-			transform.rotation = Quaternion.Euler(30,90,0);
+		case TypeOfFieldView.SIDE_VIEW_LEFT:
+			offset = offsetSide_Left;
+			transform.rotation = Quaternion.Euler(side_View_Left.x, side_View_Left.y, side_View_Left.z);
+			break;
+		case TypeOfFieldView.SIDE_VIEW_RIGHT:
+			offset = offsetSide_Right;
+			transform.rotation = Quaternion.Euler(side_View_Right.x, side_View_Right.y, side_View_Right.z);
 			break;
 		}
 	}

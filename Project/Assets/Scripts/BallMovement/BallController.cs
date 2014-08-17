@@ -21,6 +21,8 @@ public class BallController : MonoBehaviour {
 	public Color c4 = Color.red;
 	public LineRenderer lineRenderer;
 	public bool enableDebugLine = true;
+	public int fingerTouchIndex = 1;
+	public float shotLerpOffset = 0.3f;
 
 	private bool takeShot = false;
 	private float gestureTime;
@@ -29,12 +31,14 @@ public class BallController : MonoBehaviour {
 	private Vector3 ballLaunchDir;
 	private Vector3 ballLaunchDir_Mod;
 	private float ballLaunchSpeed;
+	private TypeOfFieldView fieldView;
 
 	// Use this for initialization
 	void Start () {
 		if (Application.platform == RuntimePlatform.Android) {
 			useTouch = true;
 		}
+		fieldView = Camera.main.GetComponent<GameCamera> ().fieldView;
 	}
 	
 	// Update is called once per frame
@@ -65,7 +69,15 @@ public class BallController : MonoBehaviour {
 		// Touch Controls
 		if (useTouch && Input.touchCount > 0){
 			//foreach (Touch touch in Input.touches)
-			Touch touch = Input.GetTouch(0);
+			Touch touch;// = Input.GetTouch(0);
+			if( Input.touchCount == 1 ) {
+				touch = Input.GetTouch(0);
+			}
+			else {
+				touch = Input.GetTouch(fingerTouchIndex);
+			}
+			
+			if( touch.position.x > (Screen.width/2) )
 			{
 				switch (touch.phase)
 				{
@@ -100,8 +112,9 @@ public class BallController : MonoBehaviour {
 			InitBallLaunch();
 
 			if( enableDebugLine ) {
-				LineRenderer ballLine = Instantiate(lineRenderer, transform.position, transform.rotation) as LineRenderer;
-				LineRenderer ballLine_Mod = Instantiate(lineRenderer, transform.position, transform.rotation) as LineRenderer;
+				//LineRenderer ballLine = Instantiate(lineRenderer, transform.position, transform.rotation) as LineRenderer;
+				LineRenderer ballLine = Instantiate(lineRenderer, transform.position, Quaternion.identity) as LineRenderer;
+				LineRenderer ballLine_Mod = Instantiate(lineRenderer, transform.position, Quaternion.identity) as LineRenderer;
 				
 				ballLine.SetColors(c1, c2);
 				ballLine.SetWidth(0.1F, 0.1F);
@@ -126,6 +139,8 @@ public class BallController : MonoBehaviour {
 			takeShot = false;
 
 			Rigidbody shot = Instantiate(ballProjectile, transform.position, transform.rotation) as Rigidbody;
+			Physics.IgnoreCollision(gameObject.collider, shot.collider);
+			Physics.IgnoreLayerCollision(shot.gameObject.layer, shot.gameObject.layer);
 			shot.AddForce(ballLaunchDir_Mod * ballLaunchSpeed, ForceMode.Impulse);
 			//Debug.DrawLine(transform.position, transform.position+(ballLaunchDir * ballLaunchSpeed), Color.red, 2, false);
 			
@@ -135,10 +150,24 @@ public class BallController : MonoBehaviour {
 
 	void InitBallLaunch() {
 		swipeDir.Normalize();
+		switch (fieldView)
+		{
+		case TypeOfFieldView.BACK_VIEW :
+			break;
+		case TypeOfFieldView.SIDE_VIEW_LEFT :
+			swipeDir = Utility.Rotate2D(swipeDir, -90.0f);
+			break;
+		case TypeOfFieldView.SIDE_VIEW_RIGHT :
+			swipeDir = Utility.Rotate2D(swipeDir, 90.0f);
+			break;
+		}
+		swipeDir.Normalize();
+		//Vector2 swipeDir_Up = Utility.Rotate2D(Vector2.up, 90.0f);
 		Vector2 swipeDir_Up = Vector2.up;
-		Vector2 swipeDir_Mod = Vector2.Lerp(swipeDir, swipeDir_Up, 0.5f);
-		//Debug.Log ( "swipeDir = " + swipeDir );
-		//Debug.Log ( "swipeDirNorm = " + swipeDir.normalized );
+		//Vector2 swipeDir_Up = swipeStartPos + Vector2.up;
+		swipeDir_Up.Normalize();
+		//Vector2 swipeDir_Up = Vector2.right;//Vector2.up;
+		Vector2 swipeDir_Mod = Vector2.Lerp(swipeDir, swipeDir_Up, shotLerpOffset);
 		
 		
 		float upForce = upwardForce * gestureTime;
