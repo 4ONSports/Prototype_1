@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: df8c9d1699c8b4f7fac14a4c1a3ce5a1
+=======
+guid: b46d639c950c671448064d144704297f
+>>>>>>> Added new Scenario Scene, Added Debug UI Menu, Rewriting Ball Physics to use only swipe time instead of magnitude
 folderAsset: yes
 DefaultImporter:
   userData: 

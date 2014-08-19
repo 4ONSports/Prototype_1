@@ -13,12 +13,15 @@ public class SoccerBall : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider c) {
-		if (c.tag == "Player"&& !IsInPossession) {
-			Deactivate();
-			c.GetComponent<PlayerNavigation>().OnGetBall(this);
+		BallController bc = c.GetComponent<BallController> ();
+		if ( c.tag == "Player" && !bc.IsPlayerInPossessionOfABall() ) {
+			//Deactivate();
+			bc.OnGetBall(this);
+			//Debug.Log ("Ball In Possession");
 		}
 	}
 
+	/*
 	public void Kick(){
 		StartCoroutine (KickCoroutine());
 	}
@@ -29,13 +32,14 @@ public class SoccerBall : MonoBehaviour {
 		IsInPossession = false;
 	}
 
-	void Activate() {
+	public void Activate() {
 		this.rigidbody.WakeUp();
 		this.collider.enabled = true;
 	}
 
-	void Deactivate() {
+	public void Deactivate() {
 		this.rigidbody.Sleep();
 		this.collider.enabled = false;
 	}
+	*/
 }

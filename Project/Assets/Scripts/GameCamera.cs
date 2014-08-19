@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 public class GameCamera : MonoBehaviour {
 
-	[HideInInspector] public TypeOfFieldView fieldView = TypeOfFieldView.BACK_VIEW;
-
 	[SerializeField] private Transform debugTransform = null;
 	[SerializeField] private List<Transform> targetTransforms = null;
 	[SerializeField] private Vector3 offsetBack = new Vector3(0,7,-9);
@@ -18,11 +16,19 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private Vector3 side_View_Right = new Vector3(30,-90,0);
 
 	private Vector3 offset;
+	private InputListener match_IL;
 
 
 	void Start() {
+		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
+	}
+	
+	void Update () {
+	}
+
+	void LateUpdate () {
 		//TODO:Remove this switch
-		switch(fieldView) {
+		switch(match_IL.fieldView) {
 		case TypeOfFieldView.BACK_VIEW:
 			offset = offsetBack;
 			transform.rotation = Quaternion.Euler(back_View.x, back_View.y, back_View.z);
@@ -36,10 +42,8 @@ public class GameCamera : MonoBehaviour {
 			transform.rotation = Quaternion.Euler(side_View_Right.x, side_View_Right.y, side_View_Right.z);
 			break;
 		}
-	}
 
 
-	void LateUpdate () {
 		Vector3 mediumPoint = Vector3.zero;
 		Vector3 sum = Vector3.zero;
 		//TODO: Get rid of this if

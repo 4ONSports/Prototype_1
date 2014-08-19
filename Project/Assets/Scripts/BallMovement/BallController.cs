@@ -7,6 +7,8 @@ public class BallController : MonoBehaviour {
 	private Vector2 swipeStartPos = Vector2.zero;
 	private Vector2 swipeDir = Vector2.zero;
 
+	public bool useConstantSwipeTime  = true;
+	public float constantSwipeTime  = 2.0f;
 	public float minSwipeMagnitude  = 0.0f;
 	public float maxSwipeTime = 15.0f;
 	public float touchSpeed = 5.0f;
@@ -23,22 +25,29 @@ public class BallController : MonoBehaviour {
 	public bool enableDebugLine = true;
 	public int fingerTouchIndex = 1;
 	public float shotLerpOffset = 0.3f;
-
+	public bool createBallFromBC = true;
+	
+	[SerializeField] private Transform parentedSoccerBallTransform = null;
 	private bool takeShot = false;
 	private float gestureTime;
 	private float gestureMagnitude;
 	private bool useTouch = false;
-	private Vector3 ballLaunchDir;
-	private Vector3 ballLaunchDir_Mod;
+	private Vector3 ballLaunchForceVector;
+	private Vector3 ballLaunchForceVector_Mod;
 	private float ballLaunchSpeed;
-	private TypeOfFieldView fieldView;
+	private InputListener match_IL;
+	private SoccerBall soccerBall = null;
+	private bool isPlayerInPossessionOfABall = false;
+	private const bool kUseConstantSwipeMagnitude  = true;
+	private const float kSwipeMagnitude  = 1.0f;
 
 	// Use this for initialization
 	void Start () {
 		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
 			useTouch = true;
 		}
-		fieldView = Camera.main.GetComponent<GameCamera> ().fieldView;
+		
+		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
 	}
 	
 	// Update is called once per frame
@@ -49,13 +58,13 @@ public class BallController : MonoBehaviour {
 			mousePos.x = Input.mousePosition.x;
 			mousePos.y = Input.mousePosition.y;
 
-			if( Input.GetMouseButtonDown(0) ) {
+			if( Input.GetMouseButtonDown(1) ) {
 				isSwipe = true;
 				swipeStartTime = Time.time;
 				swipeStartPos = mousePos;
 			}
 			
-			if( Input.GetMouseButtonUp(0) ) {
+			if( Input.GetMouseButtonUp(1) ) {
 				gestureTime = Time.time - swipeStartTime;
 				gestureMagnitude = (mousePos - swipeStartPos).magnitude;
 				
@@ -120,17 +129,20 @@ public class BallController : MonoBehaviour {
 				ballLine.SetWidth(0.1F, 0.1F);
 				ballLine.SetVertexCount(2);
 				ballLine.SetPosition(0, transform.position);
-				ballLine.SetPosition(1, transform.position+(ballLaunchDir * ballLaunchSpeed));
+				ballLine.SetPosition(1, transform.position+(ballLaunchForceVector));
 				
 				ballLine_Mod.SetColors(c3, c4);
 				ballLine_Mod.SetWidth(0.1F, 0.1F);
 				ballLine_Mod.SetVertexCount(2);
 				ballLine_Mod.SetPosition(0, transform.position);
-				ballLine_Mod.SetPosition(1, transform.position+(ballLaunchDir_Mod * ballLaunchSpeed));
+				ballLine_Mod.SetPosition(1, transform.position+(ballLaunchForceVector_Mod));
 				
 				Destroy (ballLine.gameObject, 1.0f);
 				Destroy (ballLine_Mod.gameObject, 1.0f);
 			}
+		}
+		else {
+			MoveBall();
 		}
 	}
 
@@ -138,19 +150,13 @@ public class BallController : MonoBehaviour {
 		if (takeShot) {
 			takeShot = false;
 
-			Rigidbody shot = Instantiate(ballProjectile, transform.position, transform.rotation) as Rigidbody;
-			Physics.IgnoreCollision(gameObject.collider, shot.collider);
-			Physics.IgnoreLayerCollision(shot.gameObject.layer, shot.gameObject.layer);
-			shot.AddForce(ballLaunchDir_Mod * ballLaunchSpeed, ForceMode.Impulse);
-			//Debug.DrawLine(transform.position, transform.position+(ballLaunchDir * ballLaunchSpeed), Color.red, 2, false);
-			
-			Destroy (shot.gameObject, 3.0f);
+			TakeShot();
 		}
 	}
 
 	void InitBallLaunch() {
 		swipeDir.Normalize();
-		switch (fieldView)
+		switch (match_IL.fieldView)
 		{
 		case TypeOfFieldView.BACK_VIEW :
 			break;
@@ -162,31 +168,89 @@ public class BallController : MonoBehaviour {
 			break;
 		}
 		swipeDir.Normalize();
-		//Vector2 swipeDir_Up = Utility.Rotate2D(Vector2.up, 90.0f);
+
 		Vector2 swipeDir_Up = Vector2.up;
-		//Vector2 swipeDir_Up = swipeStartPos + Vector2.up;
 		swipeDir_Up.Normalize();
-		//Vector2 swipeDir_Up = Vector2.right;//Vector2.up;
 		Vector2 swipeDir_Mod = Vector2.Lerp(swipeDir, swipeDir_Up, shotLerpOffset);
-		
-		
-		float upForce = upwardForce * gestureTime;
+
+		float upForce = upwardForce;
+		//float upForce = upwardForce * gestureTime;
 		if( upForce > MAX_UPFORCE )
 			upForce = MAX_UPFORCE;
-		ballLaunchDir.x = swipeDir.x * gestureMagnitude;
-		ballLaunchDir.y = upForce;
-		ballLaunchDir.z = swipeDir.y * gestureMagnitude;
-		ballLaunchDir_Mod.x = swipeDir_Mod.x * gestureMagnitude;
-		ballLaunchDir_Mod.y = upForce;
-		ballLaunchDir_Mod.z = swipeDir_Mod.y * gestureMagnitude;
 
+		// Shooting feature can be developed using both swipe magnitude and swipe time
+		// for simplicity of controls, we are using only one which would be swipe time
+		if( kUseConstantSwipeMagnitude ) {
+			gestureMagnitude = kSwipeMagnitude;
+		}
+		if( useConstantSwipeTime ) {
+			gestureTime = constantSwipeTime;
+		}
+
+		// TODO determine launch speed and launch height(aka upward Force) from swipe time only
 		if( useTouch ){
-			ballLaunchSpeed = gestureTime * touchSpeed;
+			ballLaunchSpeed = gestureMagnitude * gestureTime * touchSpeed;
 		}
 		else {
-			ballLaunchSpeed = gestureTime * mouseSpeed;
+			ballLaunchSpeed = gestureMagnitude * gestureTime * mouseSpeed;
 		}
-		if( ballLaunchSpeed > MAX_BALLSPEED )
+		if( ballLaunchSpeed > MAX_BALLSPEED ) {
+			Debug.Log ("MaxSpeed Hit!");
 			ballLaunchSpeed = MAX_BALLSPEED;
+		}
+
+
+		ballLaunchForceVector.x = swipeDir.x * ballLaunchSpeed;
+		ballLaunchForceVector.y = upForce;
+		ballLaunchForceVector.z = swipeDir.y * ballLaunchSpeed;
+		ballLaunchForceVector_Mod.x = swipeDir_Mod.x * ballLaunchSpeed;
+		ballLaunchForceVector_Mod.y = upForce;
+		ballLaunchForceVector_Mod.z = swipeDir_Mod.y * ballLaunchSpeed;
+	}
+	
+	public void TakeShot () {
+		if( createBallFromBC ) {
+			Rigidbody shot = Instantiate(ballProjectile, transform.position, transform.rotation) as Rigidbody;
+			shot.freezeRotation = true;
+			Physics.IgnoreCollision(gameObject.collider, shot.collider);
+			Physics.IgnoreLayerCollision(shot.gameObject.layer, shot.gameObject.layer);
+			shot.AddForce(ballLaunchForceVector_Mod, ForceMode.Impulse);
+			
+			Destroy (shot.gameObject, 30.0f);
+		}
+		else {
+			if (soccerBall) {
+				soccerBall.rigidbody.velocity = Vector3.zero;
+				soccerBall.rigidbody.angularVelocity = Vector3.zero;
+				soccerBall.rigidbody.AddForce(ballLaunchForceVector_Mod, ForceMode.Impulse);
+
+				soccerBall = null;
+				isPlayerInPossessionOfABall = false;
+			}
+		}
+
+		//Debug.DrawLine(transform.position, transform.position+(ballLaunchForceVector), Color.red, 2, false);
+	}
+	
+	public void OnGetBall (SoccerBall _soccerBall) {
+		soccerBall = _soccerBall;
+		
+		soccerBall.transform.position = parentedSoccerBallTransform.position;
+		soccerBall.transform.rotation = transform.rotation;
+		soccerBall.rigidbody.freezeRotation = true;
+
+		isPlayerInPossessionOfABall = true;
+		Physics.IgnoreCollision(gameObject.collider, soccerBall.collider);
+	}
+	
+	public void MoveBall () {
+		//Snap Soccer Ball
+		if (soccerBall) {
+			soccerBall.transform.position = parentedSoccerBallTransform.position;
+		}
+	}
+	
+	public bool IsPlayerInPossessionOfABall () {
+		return isPlayerInPossessionOfABall;
 	}
 }

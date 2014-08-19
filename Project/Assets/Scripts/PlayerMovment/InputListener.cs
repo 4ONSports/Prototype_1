@@ -10,12 +10,12 @@ public enum TypeOfFieldView{
 public class InputListener : MonoBehaviour {
 
 	
-	[SerializeField] private TypeOfFieldView fieldView = TypeOfFieldView.BACK_VIEW;
+	[SerializeField] public TypeOfFieldView fieldView = TypeOfFieldView.BACK_VIEW;
 	[SerializeField] private PlayerNavigation pn = null;
 	[SerializeField] private MobileControl mc = null;
 
 	void Awake() {
-		Camera.main.GetComponent<GameCamera> ().fieldView = this.fieldView;
+		//Camera.main.GetComponent<GameCamera> ().fieldView = this.fieldView;
 	}
 	
 	void Update () {
@@ -33,7 +33,7 @@ public class InputListener : MonoBehaviour {
 				break;
 			}
 
-			if(Input.GetKeyDown(KeyCode.Space)) pn.Kick();
+			//if(Input.GetKeyDown(KeyCode.Space)) pn.Kick();
 		} else {
 			MoveInput (new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical")));
 		}
