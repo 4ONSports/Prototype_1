@@ -17,6 +17,7 @@ public class GameDebug : MonoBehaviour {
 	}
 
 	public static bool CheckIfActiveFeature(DebugFeature feature) {
-		return activeDebugFeatures [feature];
+		// Disabling feature until Kaue's fix
+		return false;//activeDebugFeatures [feature];
 	}
 }
