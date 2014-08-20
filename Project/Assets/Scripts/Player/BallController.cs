@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BallController : MonoBehaviour {
 	private bool isSwipe = false;
@@ -24,8 +25,9 @@ public class BallController : MonoBehaviour {
 	public LineRenderer lineRenderer;
 	public bool enableDebugLine = true;
 	public int fingerTouchIndex = 1;
-	public float shotLerpOffset = 0.3f;
+	public float[] shotLerpOffsets;
 	public bool createBallFromBC = true;
+	public int NumOfUpdatesForShooting = 10;
 	
 	[SerializeField] private Transform parentedSoccerBallTransform = null;
 	private bool takeShot = false;
@@ -40,6 +42,8 @@ public class BallController : MonoBehaviour {
 	private bool isPlayerInPossessionOfABall = false;
 	private const bool kUseConstantSwipeMagnitude  = true;
 	private const float kSwipeMagnitude  = 1.0f;
+	private Vector3 shotTargetPosition;
+	private bool isShooting = false;
 
 	// Use this for initialization
 	void Start () {
@@ -48,6 +52,7 @@ public class BallController : MonoBehaviour {
 		}
 		
 		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
+		shotTargetPosition = GameObject.Find("GoalPost").transform.position;
 	}
 	
 	// Update is called once per frame
@@ -168,9 +173,40 @@ public class BallController : MonoBehaviour {
 			break;
 		}
 		swipeDir.Normalize();
+		
+		Vector3 goalXZPos = shotTargetPosition;
+		goalXZPos.y = transform.position.y;
+		Vector3 playerToGoalDir = goalXZPos - transform.position;
+		playerToGoalDir.Normalize ();
+		if( enableDebugLine ) {
+			//LineRenderer ballLine = Instantiate(lineRenderer, transform.position, transform.rotation) as LineRenderer;
+			LineRenderer playerToGoalDir_Line = Instantiate(lineRenderer, transform.position, Quaternion.identity) as LineRenderer;
+			
+			playerToGoalDir_Line.SetColors(Color.green, Color.green);
+			playerToGoalDir_Line.SetWidth(0.1F, 0.1F);
+			playerToGoalDir_Line.SetVertexCount(2);
+			playerToGoalDir_Line.SetPosition(0, transform.position);
+			playerToGoalDir_Line.SetPosition(1, transform.position+(playerToGoalDir*30.0f));
 
-		Vector2 swipeDir_Up = Vector2.up;
+			Destroy (playerToGoalDir_Line.gameObject, 1.0f);
+		}
+		
+		//Vector2 swipeDir_Up = Vector2.up;
+		Vector2 swipeDir_Up = new Vector2(playerToGoalDir.x, playerToGoalDir.z);
 		swipeDir_Up.Normalize();
+		float shotLerpOffset = 0.0f;
+		switch (match_IL.fieldView)
+		{
+		case TypeOfFieldView.BACK_VIEW :
+			shotLerpOffset = shotLerpOffsets[0];
+			break;
+		case TypeOfFieldView.SIDE_VIEW_LEFT :
+			shotLerpOffset = shotLerpOffsets[1];
+			break;
+		case TypeOfFieldView.SIDE_VIEW_RIGHT :
+			shotLerpOffset = shotLerpOffsets[2];
+			break;
+		}
 		Vector2 swipeDir_Mod = Vector2.Lerp(swipeDir, swipeDir_Up, shotLerpOffset);
 
 		float upForce = upwardForce;
@@ -216,10 +252,11 @@ public class BallController : MonoBehaviour {
 			Physics.IgnoreLayerCollision(shot.gameObject.layer, shot.gameObject.layer);
 			shot.AddForce(ballLaunchForceVector_Mod, ForceMode.Impulse);
 			
-			Destroy (shot.gameObject, 30.0f);
+			Destroy (shot.gameObject, 3.0f);
 		}
 		else {
 			if (soccerBall) {
+				soccerBall.ballTrigger.DisableTrigger(NumOfUpdatesForShooting);
 				soccerBall.rigidbody.velocity = Vector3.zero;
 				soccerBall.rigidbody.angularVelocity = Vector3.zero;
 				soccerBall.rigidbody.AddForce(ballLaunchForceVector_Mod, ForceMode.Impulse);

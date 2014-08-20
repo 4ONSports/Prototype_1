@@ -7,18 +7,14 @@ public class SoccerBall : MonoBehaviour {
 		get;
 		set;
 	}
+	public BallTrigger ballTrigger;
 
 	void Start() {
 		IsInPossession = false;
 	}
-
-	void OnTriggerEnter(Collider c) {
-		BallController bc = c.GetComponent<BallController> ();
-		if ( c.tag == "Player" && !bc.IsPlayerInPossessionOfABall() ) {
-			//Deactivate();
-			bc.OnGetBall(this);
-			//Debug.Log ("Ball In Possession");
-		}
+	
+	public void OnPlayerTouch(BallController bc) {
+		bc.OnGetBall(this);
 	}
 
 	/*
