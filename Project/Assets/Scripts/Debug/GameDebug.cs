@@ -10,14 +10,16 @@ public class GameDebug : MonoBehaviour {
 
 	[SerializeField] private bool debugCameraMiddlePoint = false;
 	 
-	private static Dictionary<DebugFeature, bool> activeDebugFeatures = new Dictionary<DebugFeature, bool>();
+	private static Dictionary<DebugFeature, bool> activeDebugFeatures = new Dictionary<DebugFeature, bool>()
+	{
+		{DebugFeature.DEBUG_CAMERA_MIDDLE_POINT, false},
+	};
 
 	void Start() {
 		activeDebugFeatures.Add(DebugFeature.DEBUG_CAMERA_MIDDLE_POINT,debugCameraMiddlePoint);
 	}
 
 	public static bool CheckIfActiveFeature(DebugFeature feature) {
-		// Disabling feature until Kaue's fix
-		return false;//activeDebugFeatures [feature];
+		return activeDebugFeatures [feature];
 	}
 }
