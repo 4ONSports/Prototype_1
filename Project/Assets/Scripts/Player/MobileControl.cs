@@ -20,21 +20,17 @@ public class MobileControl : MonoBehaviour {
 	}
 
 	void OnMouseDrag() 	{
+		Vector3 curScreenPoint = Vector3.zero;
 		if ( !useTouch ) {
-			Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-			Vector3 curPosition = uiCamera.ScreenToWorldPoint(curScreenPoint);
-			joystickTop.position = new Vector3 (curPosition.x,curPosition.y,joystickTop.position.z);
-			normal = Vector3.Normalize (joystickTop.localPosition);
-			joystickTop.localPosition = normal * 0.5f;
-		}
-		else {
+			curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
+		} else {
 			Touch touch = Input.GetTouch(0);
-			Vector3 curScreenPoint = new Vector3(touch.position.x, touch.position.y, screenPoint.z);
-			Vector3 curPosition = uiCamera.ScreenToWorldPoint(curScreenPoint);
-			joystickTop.position = new Vector3 (curPosition.x,curPosition.y,joystickTop.position.z);
-			normal = Vector3.Normalize (joystickTop.localPosition);
-			joystickTop.localPosition = normal * 0.5f;
+			curScreenPoint = new Vector3(touch.position.x, touch.position.y, screenPoint.z);
 		}
+		Vector3 curPosition = uiCamera.ScreenToWorldPoint(curScreenPoint);
+		joystickTop.position = new Vector3 (curPosition.x,curPosition.y,joystickTop.position.z);
+		normal = Vector3.Normalize (joystickTop.localPosition);
+		joystickTop.localPosition = normal * 0.5f;
 	}
 	
 	void OnMouseUp() {
