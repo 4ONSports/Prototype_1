@@ -7,6 +7,7 @@ public class BallController : MonoBehaviour {
 	private float swipeStartTime  = 0.0f;
 	private Vector2 swipeStartPos = Vector2.zero;
 	private Vector2 swipeDir = Vector2.zero;
+	private Vector2 swipeDir_Mod = Vector2.zero;
 
 	public bool useConstantSwipeTime  = true;
 	public float constantSwipeTime  = 2.0f;
@@ -34,6 +35,7 @@ public class BallController : MonoBehaviour {
 	public float[] shotLerpOffsets;
 	public bool createBallFromBC = true;
 	public int NumOfUpdatesForShooting = 10;
+	public float shotDirLineLength = 10.0f;
 	
 	[SerializeField] private Transform parentedSoccerBallTransform = null;
 
@@ -51,6 +53,8 @@ public class BallController : MonoBehaviour {
 	private const float kSwipeMagnitude  = 1.0f;
 	private Vector3 shotTargetPosition;
 	private bool isShooting = false;
+	private bool renderShotDirLine = false;
+	private LineRenderer shotDirLineRenderer;
 
 	// Use this for initialization
 	void Start () {
@@ -95,6 +99,17 @@ public class BallController : MonoBehaviour {
 					swipeDir = mousePos - swipeStartPos;
 					takeShot = true;
 				}
+
+				renderShotDirLine = false;
+				if( shotDirLineRenderer != null ) {
+					Destroy (shotDirLineRenderer.gameObject, 3.0f);
+				}
+			}
+			if( Input.GetMouseButton(1) ) {
+				if( isSwipe ) {
+					renderShotDirLine = true;
+					swipeDir = mousePos - swipeStartPos;
+				}
 			}
 		}
 		
@@ -123,6 +138,11 @@ public class BallController : MonoBehaviour {
 				case TouchPhase.Canceled :
 					/* The touch is being canceled */
 					isSwipe = false;
+					renderShotDirLine = false;
+
+					if( shotDirLineRenderer != null ) {
+						Destroy (shotDirLineRenderer.gameObject, 3.0f);
+					}
 					break;
 					
 				case TouchPhase.Ended :
@@ -135,13 +155,31 @@ public class BallController : MonoBehaviour {
 						swipeDir = touch.position - swipeStartPos;
 						takeShot = true;
 					}
+					
+					renderShotDirLine = false;
+					if( shotDirLineRenderer != null ) {
+						Destroy (shotDirLineRenderer.gameObject, 3.0f);
+					}
+					break;
+					
+				case TouchPhase.Moved :
+					if( isSwipe ) {
+						renderShotDirLine = true;
+						swipeDir = touch.position - swipeStartPos;
+					}
 					break;
 				}
 			}
 		}
 
+		if( renderShotDirLine ) {
+			InitBallLaunch();
+			RenderShotDirLine();
+		}
+
 		if (takeShot) {
 			InitBallLaunch();
+			CalcShotSpeedAndHeight();
 
 			if( enableDebugLine ) {
 				//LineRenderer ballLine = Instantiate(lineRenderer, transform.position, transform.rotation) as LineRenderer;
@@ -225,8 +263,27 @@ public class BallController : MonoBehaviour {
 			shotLerpOffset = shotLerpOffsets[2];
 			break;
 		}
-		Vector2 swipeDir_Mod = Vector2.Lerp(swipeDir, swipeDir_Up, shotLerpOffset);
+		swipeDir_Mod = Vector2.Lerp(swipeDir, swipeDir_Up, shotLerpOffset);
+	}
 
+	void RenderShotDirLine () {
+
+		shotDirLineRenderer = (shotDirLineRenderer == null) ? Instantiate(lineRenderer, transform.position, Quaternion.identity) as LineRenderer: shotDirLineRenderer;
+
+		shotDirLineRenderer.SetColors(Color.cyan, Color.cyan);
+		shotDirLineRenderer.SetWidth(0.2F, 0.2F);
+		shotDirLineRenderer.SetVertexCount(2);
+		Vector3 shotDir_Line_StartPos = transform.position;
+		shotDir_Line_StartPos.y = -1.0f;
+		shotDirLineRenderer.SetPosition(0, shotDir_Line_StartPos);
+		Vector3 shotDirVector;
+		shotDirVector.x = swipeDir_Mod.x * shotDirLineLength;
+		shotDirVector.y = 0.0f;
+		shotDirVector.z = swipeDir_Mod.y * shotDirLineLength;
+		shotDirLineRenderer.SetPosition(1, shotDir_Line_StartPos+(shotDirVector));
+	}
+	
+	void CalcShotSpeedAndHeight () {
 		// Shooting feature can be developed using both swipe magnitude and swipe time
 		// for simplicity of controls, we are using only one which would be swipe time
 		if( kUseConstantSwipeMagnitude ) {
@@ -237,7 +294,7 @@ public class BallController : MonoBehaviour {
 		}
 		gestureTime = (gestureTime > maxSwipeTime) ? maxSwipeTime : gestureTime;
 		Debug.Log ("gestureTime == " + gestureTime);
-
+		
 		// determine ball speed
 		// gesture time == power
 		// speed = gesture time * tune factor
@@ -246,7 +303,7 @@ public class BallController : MonoBehaviour {
 			Debug.Log ("MaxSpeed Hit!");
 			ballLaunchSpeed = MAX_BALLSPEED;
 		}
-
+		
 		// determine ball shot height
 		float upForce = 1.0f;
 		upForce = gestureTime * shotHeightFactor;
@@ -254,8 +311,8 @@ public class BallController : MonoBehaviour {
 			Debug.Log ("MaxUPForce Hit!");
 			upForce = MAX_UPFORCE;
 		}
-
-
+		
+		
 		ballLaunchForceVector.x = swipeDir.x * ballLaunchSpeed;
 		ballLaunchForceVector.y = upForce;
 		ballLaunchForceVector.z = swipeDir.y * ballLaunchSpeed;
@@ -263,8 +320,8 @@ public class BallController : MonoBehaviour {
 		ballLaunchForceVector_Mod.y = upForce;
 		ballLaunchForceVector_Mod.z = swipeDir_Mod.y * ballLaunchSpeed;
 	}
-	
-	public void TakeShot () {
+
+	void TakeShot () {
 		if( createBallFromBC ) {
 			Rigidbody shot = Instantiate(ballProjectile, transform.position, transform.rotation) as Rigidbody;
 			shot.freezeRotation = true;
