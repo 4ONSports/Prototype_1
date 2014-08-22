@@ -15,7 +15,8 @@ public class GameDebug : MonoBehaviour {
 		{DebugFeature.DEBUG_CAMERA_MIDDLE_POINT, false},
 	};
 
-	void Start() {
+	void Awake() {
+		activeDebugFeatures.Clear ();
 		activeDebugFeatures.Add(DebugFeature.DEBUG_CAMERA_MIDDLE_POINT,debugCameraMiddlePoint);
 	}
 

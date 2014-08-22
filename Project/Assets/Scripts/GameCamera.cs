@@ -43,21 +43,23 @@ public abstract class GameCameraBehaviour {
 	abstract public void OnCameraSwitch();
 	abstract public void OnCameraLogic();
 
-	public Vector3 GetMediumPoint() {
+	public Vector3 GetMediumPoint(List<Transform> _transforms) {
+		List<Vector3> _vectors = new List<Vector3>();
+		foreach(Transform t in _transforms)_vectors.Add(t.position);
+		return GetMediumPoint (_vectors);
+	}
+
+	public Vector3 GetMediumPoint(List<Vector3> _vectors) {
 		Vector3 sum = Vector3.zero;
-		//TODO: Get rid of this if
-		if(gc.targetTransforms.Count > 1) {
-			foreach (Transform t in gc.targetTransforms) {
-				sum += t.transform.position;
-			}
-			return sum * 0.5f;
-		} else {
-			return gc.targetTransforms[0].transform.position;
+		foreach (Vector3 v in _vectors) {
+			sum += v;
 		}
+		return sum / _vectors.Count;
 	}
 
 	public void OnDebugMiddlePoint() {
-		gc.debugTransform.position = GetMediumPoint ();
+		if(gc.debugTransform)
+		gc.debugTransform.position = GetMediumPoint (gc.targetTransforms);
 	}
 
 
@@ -75,12 +77,21 @@ public class GameCameraBehaviourBack : GameCameraBehaviour {
 	}
 
 	override public void OnCameraLogic() {
-		gc.transform.position = Vector3.MoveTowards (gc.transform.position,GetMediumPoint()  + offset,10f* Time.deltaTime);
+		Vector3 avarageTarget = GetMediumPoint (gc.targetTransforms);
+		gc.transform.position = Vector3.MoveTowards (gc.transform.position,avarageTarget  + offset,10 * Time.deltaTime);
+		gc.transform.LookAt (GetMediumPoint(new List<Vector3>(){avarageTarget,new Vector3(0,0,55)})); 
 	}
 }
 
 //SIDE LEFT BEHAVIOUR
 public class GameCameraBehaviourSideLeft : GameCameraBehaviour {
+
+	Vector3 goalPosition = new Vector3(0,0,55);
+
+	float minDistanceCameraZoomOut = 15;
+	float maxDistanceCameraZoomOut = 55;
+	float rangeCameraZoomOut = 40;//max - min
+	float multiplierCameraZoomOut = 2.2f;
 	
 	public GameCameraBehaviourSideLeft (GameCamera _gc) {
 		this.gc = _gc;
@@ -92,7 +103,10 @@ public class GameCameraBehaviourSideLeft : GameCameraBehaviour {
 	}
 
 	override public void OnCameraLogic() {
-		gc.transform.position = Vector3.MoveTowards (gc.transform.position,GetMediumPoint()  + offset,10f* Time.deltaTime);
+		Vector3 avarageTarget = GetMediumPoint (gc.targetTransforms);
+		float clampedDistance = Mathf.Clamp (Vector3.Distance (avarageTarget, goalPosition), minDistanceCameraZoomOut, maxDistanceCameraZoomOut);
+		float offsetMultiplier = ((clampedDistance - minDistanceCameraZoomOut) / (rangeCameraZoomOut)) + (multiplierCameraZoomOut - 1); 
+		gc.transform.position = Vector3.MoveTowards (gc.transform.position,avarageTarget  + (offset * offsetMultiplier),10 * Time.deltaTime);
 	}
 }
 
@@ -109,6 +123,6 @@ public class GameCameraBehaviourSideRight : GameCameraBehaviour {
 	}
 
 	override public void OnCameraLogic() {
-		gc.transform.position = Vector3.MoveTowards (gc.transform.position,GetMediumPoint()  + offset,10f* Time.deltaTime);
+		gc.transform.position = Vector3.MoveTowards (gc.transform.position,GetMediumPoint(gc.targetTransforms)  + offset,10 * Time.deltaTime);
 	}
 }
