@@ -11,12 +11,18 @@ public class BallController : MonoBehaviour {
 	public bool useConstantSwipeTime  = true;
 	public float constantSwipeTime  = 2.0f;
 	public float minSwipeMagnitude  = 0.0f;
-	public float maxSwipeTime = 15.0f;
-	public float touchSpeed = 5.0f;
-	public float mouseSpeed = 5.0f;
-	public float upwardForce = 180.0f;
+	public float maxSwipeTime_Touch = 15.0f;
+	public float maxSwipeTime_Mouse = 15.0f;
+	private float maxSwipeTime = 1.0f;
+	//public float upwardForce = 180.0f;
 	public float MAX_UPFORCE = 100.0f;
 	public float MAX_BALLSPEED = 0.35f;
+	public float shotSpeedFactor_Touch = 15.0f;
+	public float shotSpeedFactor_Mouse = 90.0f;
+	private float shotSpeedFactor = 1.0f;
+	public float shotHeightFactor_Touch = 15.5f;
+	public float shotHeightFactor_Mouse = 15.5f;
+	private float shotHeightFactor = 1.0f;
 	public Rigidbody ballProjectile;
 	public Color c1 = Color.gray;
 	public Color c2 = Color.red;
@@ -30,6 +36,7 @@ public class BallController : MonoBehaviour {
 	public int NumOfUpdatesForShooting = 10;
 	
 	[SerializeField] private Transform parentedSoccerBallTransform = null;
+
 	private bool takeShot = false;
 	private float gestureTime;
 	private float gestureMagnitude;
@@ -53,6 +60,17 @@ public class BallController : MonoBehaviour {
 		
 		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
 		shotTargetPosition = GameObject.Find("GoalPost").transform.position;
+		
+		if (useTouch) {
+			maxSwipeTime =  maxSwipeTime_Touch;
+			shotSpeedFactor =  shotSpeedFactor_Touch;
+			shotHeightFactor =  shotHeightFactor_Touch;
+		}
+		else {
+			maxSwipeTime =  maxSwipeTime_Mouse;
+			shotSpeedFactor =  shotSpeedFactor_Mouse;
+			shotHeightFactor =  shotHeightFactor_Mouse;
+		}
 	}
 	
 	// Update is called once per frame
@@ -209,11 +227,6 @@ public class BallController : MonoBehaviour {
 		}
 		Vector2 swipeDir_Mod = Vector2.Lerp(swipeDir, swipeDir_Up, shotLerpOffset);
 
-		float upForce = upwardForce;
-		//float upForce = upwardForce * gestureTime;
-		if( upForce > MAX_UPFORCE )
-			upForce = MAX_UPFORCE;
-
 		// Shooting feature can be developed using both swipe magnitude and swipe time
 		// for simplicity of controls, we are using only one which would be swipe time
 		if( kUseConstantSwipeMagnitude ) {
@@ -222,17 +235,24 @@ public class BallController : MonoBehaviour {
 		if( useConstantSwipeTime ) {
 			gestureTime = constantSwipeTime;
 		}
+		gestureTime = (gestureTime > maxSwipeTime) ? maxSwipeTime : gestureTime;
+		Debug.Log ("gestureTime == " + gestureTime);
 
-		// TODO determine launch speed and launch height(aka upward Force) from swipe time only
-		if( useTouch ){
-			ballLaunchSpeed = gestureMagnitude * gestureTime * touchSpeed;
-		}
-		else {
-			ballLaunchSpeed = gestureMagnitude * gestureTime * mouseSpeed;
-		}
+		// determine ball speed
+		// gesture time == power
+		// speed = gesture time * tune factor
+		ballLaunchSpeed = gestureMagnitude * gestureTime * shotSpeedFactor;
 		if( ballLaunchSpeed > MAX_BALLSPEED ) {
 			Debug.Log ("MaxSpeed Hit!");
 			ballLaunchSpeed = MAX_BALLSPEED;
+		}
+
+		// determine ball shot height
+		float upForce = 1.0f;
+		upForce = gestureTime * shotHeightFactor;
+		if( upForce > MAX_UPFORCE ) {
+			Debug.Log ("MaxUPForce Hit!");
+			upForce = MAX_UPFORCE;
 		}
 
 

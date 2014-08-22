@@ -4597,7 +4597,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &850847278
 Transform:
   m_ObjectHideFlags: 0
@@ -7208,7 +7208,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4fed4cadaf3143b4cb0d9250646ec74e, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2.87702179
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4fed4cadaf3143b4cb0d9250646ec74e, type: 2}
       propertyPath: m_LocalRotation.x
@@ -7232,7 +7232,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 4fed4cadaf3143b4cb0d9250646ec74e, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4fed4cadaf3143b4cb0d9250646ec74e, type: 2}
@@ -8055,7 +8055,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1307234474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8076,7 +8076,7 @@ Transform:
   m_PrefabInternal: {fileID: 1208298946}
   m_GameObject: {fileID: 1307234473}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalPosition: {x: 0, y: 5, z: 2.87702179}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1872035626}
@@ -9606,7 +9606,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1476207187
 Transform:
   m_ObjectHideFlags: 0
@@ -11448,15 +11448,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ed26dc1926e1c94b93b40e559b4c346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useConstantSwipeTime: 1
+  useConstantSwipeTime: 0
   constantSwipeTime: 3
   minSwipeMagnitude: 0
-  maxSwipeTime: 1
-  touchSpeed: 15
-  mouseSpeed: 15
-  upwardForce: 8
-  MAX_UPFORCE: 10
-  MAX_BALLSPEED: 45
+  maxSwipeTime_Touch: .800000012
+  maxSwipeTime_Mouse: .600000024
+  MAX_UPFORCE: 15
+  MAX_BALLSPEED: 50
+  shotSpeedFactor_Touch: 200
+  shotSpeedFactor_Mouse: 200
+  shotHeightFactor_Touch: 20
+  shotHeightFactor_Mouse: 30
   ballProjectile: {fileID: 5400000, guid: 4fed4cadaf3143b4cb0d9250646ec74e, type: 2}
   c1: {r: .5, g: .5, b: .5, a: 1}
   c2: {r: 1, g: 0, b: 0, a: 1}
@@ -12795,7 +12797,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1931601767
 Transform:
   m_ObjectHideFlags: 0
