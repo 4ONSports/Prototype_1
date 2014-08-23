@@ -7,5 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: Assets/_Scenes/Gameplay/Player_and_Ball.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Gameplay/Scenario_1.unity
+  - enabled: 1
+    path: Assets/_Scenes/Scenarios/Scenario_Kaue.unity

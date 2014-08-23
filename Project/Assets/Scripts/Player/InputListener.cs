@@ -42,4 +42,13 @@ public class InputListener : MonoBehaviour {
 	void MoveInput (Vector2 dir) {
 		pn.Navigate (dir);
 	}
+
+	void OnGUI() {
+		if (GUI.Button (new Rect (Screen.width - 150, 0, 150, 150), "InputListener.cs Restart()"))
+						Restart ();
+	}
+
+	void Restart() {
+		Application.LoadLevel (Application.loadedLevel);
+	}
 }

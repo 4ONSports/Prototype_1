@@ -25,6 +25,10 @@ public class MobileControl : MonoBehaviour {
 			curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
 		} else {
 			Touch touch = Input.GetTouch(0);
+			if(touch.position.x > Screen.width * 0.5f) {
+				OnMouseUp();
+				return;
+			}
 			curScreenPoint = new Vector3(touch.position.x, touch.position.y, screenPoint.z);
 		}
 		Vector3 curPosition = uiCamera.ScreenToWorldPoint(curScreenPoint);
