@@ -280,7 +280,7 @@ public class BallController : MonoBehaviour {
 		shotDirLineRenderer.SetWidth(0.2F, 0.2F);
 		shotDirLineRenderer.SetVertexCount(2);
 		Vector3 shotDir_Line_StartPos = transform.position;
-		shotDir_Line_StartPos.y = -1.0f;
+		shotDir_Line_StartPos.y = transform.position.y - 1.0f;
 		shotDirLineRenderer.SetPosition(0, shotDir_Line_StartPos);
 		Vector3 shotDirVector;
 		shotDirVector.x = swipeDir_Mod.x * shotDirLineLength;
