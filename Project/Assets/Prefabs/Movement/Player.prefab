@@ -168,6 +168,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ed26dc1926e1c94b93b40e559b4c346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableDebugLine: 0
+  enableDebugText: 0
+  createBallFromBC: 0
   useConstantSwipeTime: 0
   constantSwipeTime: 3
   minSwipeMagnitude: 0
@@ -185,15 +188,14 @@ MonoBehaviour:
   c3: {r: 1, g: .921568632, b: .0156862754, a: 1}
   c4: {r: 1, g: 0, b: 0, a: 1}
   lineRenderer: {fileID: 12000000, guid: 51b6b39fd4fc7a04a87e044d1d9db27e, type: 2}
-  enableDebugLine: 0
   fingerTouchIndex: 1
   shotLerpOffsets:
   - .5
   - .699999988
   - .800000012
-  createBallFromBC: 0
   NumOfUpdatesForShooting: 10
   shotDirLineLength: 10
+  shotTarget: {fileID: 0}
   parentedSoccerBallTransform: {fileID: 400004}
 --- !u!143 &14300000
 CharacterController:

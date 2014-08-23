@@ -13,4 +13,10 @@ public class Utility : MonoBehaviour {
 
 		return new Vector2 (tx, ty);
 	}
+
+	public static void DebugLog( string str, bool bShow=false ) {
+		if( bShow ) {
+			Debug.Log (str+":::"+bShow);
+		}
+	}
 }

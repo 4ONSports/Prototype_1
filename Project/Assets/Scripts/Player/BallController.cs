@@ -8,7 +8,10 @@ public class BallController : MonoBehaviour {
 	private Vector2 swipeStartPos = Vector2.zero;
 	private Vector2 swipeDir = Vector2.zero;
 	private Vector2 swipeDir_Mod = Vector2.zero;
-
+	
+	public bool enableDebugLine = false;
+	public bool enableDebugText = false;
+	public bool createBallFromBC = true;
 	public bool useConstantSwipeTime  = true;
 	public float constantSwipeTime  = 2.0f;
 	public float minSwipeMagnitude  = 0.0f;
@@ -30,30 +33,29 @@ public class BallController : MonoBehaviour {
 	public Color c3 = Color.yellow;
 	public Color c4 = Color.red;
 	public LineRenderer lineRenderer;
-	public bool enableDebugLine = true;
 	public int fingerTouchIndex = 1;
 	public float[] shotLerpOffsets;
-	public bool createBallFromBC = true;
 	public int NumOfUpdatesForShooting = 10;
 	public float shotDirLineLength = 10.0f;
+	public GameObject shotTarget;
 	
 	[SerializeField] private Transform parentedSoccerBallTransform = null;
 
 	private bool takeShot = false;
-	private float gestureTime;
-	private float gestureMagnitude;
 	private bool useTouch = false;
-	private Vector3 ballLaunchForceVector;
-	private Vector3 ballLaunchForceVector_Mod;
-	private float ballLaunchSpeed;
-	private InputListener match_IL;
-	private SoccerBall soccerBall = null;
 	private bool isPlayerInPossessionOfABall = false;
-	private const bool kUseConstantSwipeMagnitude  = true;
-	private const float kSwipeMagnitude  = 1.0f;
-	private Vector3 shotTargetPosition;
 	private bool isShooting = false;
 	private bool renderShotDirLine = false;
+	private const bool kUseConstantSwipeMagnitude  = true;
+	private float gestureTime;
+	private float gestureMagnitude;
+	private float ballLaunchSpeed;
+	private const float kSwipeMagnitude  = 1.0f;
+	private Vector3 ballLaunchForceVector;
+	private Vector3 ballLaunchForceVector_Mod;
+	private Vector3 shotTargetPosition;
+	private InputListener match_IL;
+	private SoccerBall soccerBall = null;
 	private LineRenderer shotDirLineRenderer;
 
 	// Use this for initialization
@@ -64,6 +66,12 @@ public class BallController : MonoBehaviour {
 		
 		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
 		shotTargetPosition = GameObject.Find("GoalPost").transform.position;
+		if( shotTarget != null ) {
+			shotTargetPosition = shotTarget.transform.position;
+		}
+		else {
+			shotTargetPosition = Vector3.zero;
+		}
 		
 		if (useTouch) {
 			maxSwipeTime =  maxSwipeTime_Touch;
@@ -148,9 +156,7 @@ public class BallController : MonoBehaviour {
 				case TouchPhase.Ended :
 					gestureTime = Time.time - swipeStartTime;
 					gestureMagnitude = (touch.position - swipeStartPos).magnitude;
-					
-					//Debug.Log("gestureTime:  "+gestureTime);
-					//Debug.Log("gestureMagnitude:  "+gestureMagnitude);
+
 					if (isSwipe && gestureTime < maxSwipeTime && gestureMagnitude > minSwipeMagnitude){
 						swipeDir = touch.position - swipeStartPos;
 						takeShot = true;
@@ -172,12 +178,12 @@ public class BallController : MonoBehaviour {
 			}
 		}
 
-		if( renderShotDirLine ) {
+		if( renderShotDirLine && shotTarget!=null ) {
 			InitBallLaunch();
 			RenderShotDirLine();
 		}
 
-		if (takeShot) {
+		if ( takeShot  && shotTarget!=null ) {
 			InitBallLaunch();
 			CalcShotSpeedAndHeight();
 
@@ -293,14 +299,14 @@ public class BallController : MonoBehaviour {
 			gestureTime = constantSwipeTime;
 		}
 		gestureTime = (gestureTime > maxSwipeTime) ? maxSwipeTime : gestureTime;
-		Debug.Log ("gestureTime == " + gestureTime);
+		Utility.DebugLog ("gestureTime == " + gestureTime, enableDebugText);
 		
 		// determine ball speed
 		// gesture time == power
 		// speed = gesture time * tune factor
 		ballLaunchSpeed = gestureMagnitude * gestureTime * shotSpeedFactor;
 		if( ballLaunchSpeed > MAX_BALLSPEED ) {
-			Debug.Log ("MaxSpeed Hit!");
+			Utility.DebugLog ("MaxSpeed Hit!", enableDebugText);
 			ballLaunchSpeed = MAX_BALLSPEED;
 		}
 		
@@ -308,7 +314,7 @@ public class BallController : MonoBehaviour {
 		float upForce = 1.0f;
 		upForce = gestureTime * shotHeightFactor;
 		if( upForce > MAX_UPFORCE ) {
-			Debug.Log ("MaxUPForce Hit!");
+			Utility.DebugLog ("MaxUPForce Hit!", enableDebugText);
 			upForce = MAX_UPFORCE;
 		}
 		
