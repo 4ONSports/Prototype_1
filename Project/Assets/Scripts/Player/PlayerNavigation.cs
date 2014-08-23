@@ -8,6 +8,7 @@ public class PlayerNavigation : MonoBehaviour {
 	[SerializeField] private float runSpeed = 10f;
 	[SerializeField] private float turnSpeed = 5f;
 
+	private float gravity = 10;
 	private CharacterController controller = null;
 	private Vector3 moveDirection = Vector3.zero;
 
@@ -17,7 +18,7 @@ public class PlayerNavigation : MonoBehaviour {
 
 	public void Navigate(Vector2 _direction) {
 		//Move
-		moveDirection = new Vector3 (_direction.x,-10*Time.deltaTime,_direction.y);
+		moveDirection = new Vector3 (_direction.x,-gravity*Time.deltaTime,_direction.y);
 		controller.Move(moveDirection * runSpeed * Time.deltaTime);
 
 		//Rotate
