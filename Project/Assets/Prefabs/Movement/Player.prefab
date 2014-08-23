@@ -29,6 +29,7 @@ GameObject:
   - 23: {fileID: 2300002}
   - 143: {fileID: 14300000}
   - 114: {fileID: 11400000}
+  - 114: {fileID: 11400002}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -84,7 +85,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.5}
+  m_LocalPosition: {x: 0, y: -.5, z: 1.29999995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -154,8 +155,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a44153290f23cba419f6e27d10d44f27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: 5
+  runSpeed: 10
   turnSpeed: 10
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ed26dc1926e1c94b93b40e559b4c346, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useConstantSwipeTime: 0
+  constantSwipeTime: 3
+  minSwipeMagnitude: 0
+  maxSwipeTime_Touch: 5
+  maxSwipeTime_Mouse: .600000024
+  MAX_UPFORCE: 15
+  MAX_BALLSPEED: 50
+  shotSpeedFactor_Touch: 150
+  shotSpeedFactor_Mouse: 150
+  shotHeightFactor_Touch: 8
+  shotHeightFactor_Mouse: 30
+  ballProjectile: {fileID: 5400000, guid: 4fed4cadaf3143b4cb0d9250646ec74e, type: 2}
+  c1: {r: .5, g: .5, b: .5, a: 1}
+  c2: {r: 1, g: 0, b: 0, a: 1}
+  c3: {r: 1, g: .921568632, b: .0156862754, a: 1}
+  c4: {r: 1, g: 0, b: 0, a: 1}
+  lineRenderer: {fileID: 12000000, guid: 51b6b39fd4fc7a04a87e044d1d9db27e, type: 2}
+  enableDebugLine: 0
+  fingerTouchIndex: 1
+  shotLerpOffsets:
+  - .5
+  - .699999988
+  - .800000012
+  createBallFromBC: 0
+  NumOfUpdatesForShooting: 10
+  shotDirLineLength: 10
   parentedSoccerBallTransform: {fileID: 400004}
 --- !u!143 &14300000
 CharacterController:
