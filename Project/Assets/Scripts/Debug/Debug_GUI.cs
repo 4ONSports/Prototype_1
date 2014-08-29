@@ -3,11 +3,11 @@ using System.Collections;
 
 public class Debug_GUI : MonoBehaviour {
 	
-	private InputListener match_IL;
+	private Camera_InputListener match_IL;
 	private BallController playerBC;
 
 	void Start () {
-		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
+		match_IL = GameObject.Find("GameMatch").GetComponent<Camera_InputListener> ();
 		playerBC = GameObject.Find("Player").GetComponent<BallController> ();
 	}
 	

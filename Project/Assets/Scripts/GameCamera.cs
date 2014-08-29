@@ -14,11 +14,11 @@ public class GameCamera : MonoBehaviour {
 	public Vector3 side_View_Right = new Vector3(30,-90,0);
 
 	private Vector3 offset;
-	private InputListener match_IL;
+	private Camera_InputListener match_IL;
 	private Dictionary<TypeOfFieldView, GameCameraBehaviour> cameraBehaviours = new Dictionary<TypeOfFieldView, GameCameraBehaviour>();
 
 	void Start() {
-		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
+		match_IL = GameObject.Find("GameMatch").GetComponent<Camera_InputListener> ();
 		cameraBehaviours.Add (TypeOfFieldView.BACK_VIEW,new GameCameraBehaviourBack(this));
 		cameraBehaviours.Add (TypeOfFieldView.SIDE_VIEW_LEFT,new GameCameraBehaviourSideLeft(this));
 		cameraBehaviours.Add (TypeOfFieldView.SIDE_VIEW_RIGHT,new GameCameraBehaviourSideRight(this));

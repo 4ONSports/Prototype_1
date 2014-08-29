@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BallController : MonoBehaviour {
-	private bool isSwipe = false;
-	private float swipeStartTime  = 0.0f;
-	private Vector2 swipeStartPos = Vector2.zero;
 	private Vector2 swipeDir = Vector2.zero;
 	private Vector2 swipeDir_Mod = Vector2.zero;
 	
@@ -42,9 +39,7 @@ public class BallController : MonoBehaviour {
 	[SerializeField] private Transform parentedSoccerBallTransform = null;
 
 	private bool takeShot = false;
-	private bool useTouch = false;
 	private bool isPlayerInPossessionOfABall = false;
-	private bool isShooting = false;
 	private bool renderShotDirLine = false;
 	private const bool kUseConstantSwipeMagnitude  = true;
 	private float gestureTime;
@@ -54,17 +49,16 @@ public class BallController : MonoBehaviour {
 	private Vector3 ballLaunchForceVector;
 	private Vector3 ballLaunchForceVector_Mod;
 	private Vector3 shotTargetPosition;
-	private InputListener match_IL;
+	private Camera_InputListener match_IL;
 	private SoccerBall soccerBall = null;
 	private LineRenderer shotDirLineRenderer;
+	private MatchScenario_Test match;
 
 	// Use this for initialization
 	void Start () {
-		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
-			useTouch = true;
-		}
-		
-		match_IL = GameObject.Find("GameMatch").GetComponent<InputListener> ();
+		match = GameObject.Find("MatchScenario").GetComponent<MatchScenario_Test> ();
+		match_IL = GameObject.Find("GameMatch").GetComponent<Camera_InputListener> ();
+
 		shotTargetPosition = GameObject.Find("GoalPost").transform.position;
 		if( shotTarget != null ) {
 			shotTargetPosition = shotTarget.transform.position;
@@ -72,8 +66,11 @@ public class BallController : MonoBehaviour {
 		else {
 			shotTargetPosition = Vector3.zero;
 		}
-		
-		if (useTouch) {
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (InputHandler.useTouch) {
 			maxSwipeTime =  maxSwipeTime_Touch;
 			shotSpeedFactor =  shotSpeedFactor_Touch;
 			shotHeightFactor =  shotHeightFactor_Touch;
@@ -83,99 +80,30 @@ public class BallController : MonoBehaviour {
 			shotSpeedFactor =  shotSpeedFactor_Mouse;
 			shotHeightFactor =  shotHeightFactor_Mouse;
 		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		// Mouse Controls
-		if (!useTouch) {
-			Vector2 mousePos;
-			mousePos.x = Input.mousePosition.x;
-			mousePos.y = Input.mousePosition.y;
 
-			if( Input.GetMouseButtonDown(1) ) {
-				isSwipe = true;
-				swipeStartTime = Time.time;
-				swipeStartPos = mousePos;
-			}
-			
-			if( Input.GetMouseButtonUp(1) ) {
-				gestureTime = Time.time - swipeStartTime;
-				gestureMagnitude = (mousePos - swipeStartPos).magnitude;
-				
-				if (isSwipe && gestureTime < maxSwipeTime && gestureMagnitude > minSwipeMagnitude){
-					swipeDir = mousePos - swipeStartPos;
-					takeShot = true;
-				}
-
-				renderShotDirLine = false;
-				if( shotDirLineRenderer != null ) {
-					Destroy (shotDirLineRenderer.gameObject, 3.0f);
-				}
-			}
-			if( Input.GetMouseButton(1) ) {
-				if( isSwipe ) {
-					renderShotDirLine = true;
-					swipeDir = mousePos - swipeStartPos;
-				}
-			}
-		}
+		switch( InputHandler.swipe_state ) {
+		case InputHandler.SwipeState.NONE:
+			break;
+		case InputHandler.SwipeState.BEGIN:
+			break;
+		case InputHandler.SwipeState.INPROGRESS:
+			renderShotDirLine = true;
+			swipeDir = InputHandler.swipe_direction;
+			break;
+		case InputHandler.SwipeState.END:
+			gestureTime = InputHandler.swipe_duration;
+			gestureMagnitude = InputHandler.swipe_length;
+			swipeDir = InputHandler.swipe_direction;
 		
-		// Touch Controls
-		if (useTouch && Input.touchCount > 0){
-			//foreach (Touch touch in Input.touches)
-			Touch touch;// = Input.GetTouch(0);
-			if( Input.touchCount == 1 ) {
-				touch = Input.GetTouch(0);
+			if ( gestureTime < maxSwipeTime && gestureMagnitude > minSwipeMagnitude ) {
+				takeShot = true;
 			}
-			else {
-				touch = Input.GetTouch(fingerTouchIndex);
-			}
-			
-			if( touch.position.x > (Screen.width/2) )
-			{
-				switch (touch.phase)
-				{
-				case TouchPhase.Began :
-					/* this is a new touch */
-					isSwipe = true;
-					swipeStartTime = Time.time;
-					swipeStartPos = touch.position;
-					break;
-					
-				case TouchPhase.Canceled :
-					/* The touch is being canceled */
-					isSwipe = false;
-					renderShotDirLine = false;
 
-					if( shotDirLineRenderer != null ) {
-						Destroy (shotDirLineRenderer.gameObject, 3.0f);
-					}
-					break;
-					
-				case TouchPhase.Ended :
-					gestureTime = Time.time - swipeStartTime;
-					gestureMagnitude = (touch.position - swipeStartPos).magnitude;
-
-					if (isSwipe && gestureTime < maxSwipeTime && gestureMagnitude > minSwipeMagnitude){
-						swipeDir = touch.position - swipeStartPos;
-						takeShot = true;
-					}
-					
-					renderShotDirLine = false;
-					if( shotDirLineRenderer != null ) {
-						Destroy (shotDirLineRenderer.gameObject, 3.0f);
-					}
-					break;
-					
-				case TouchPhase.Moved :
-					if( isSwipe ) {
-						renderShotDirLine = true;
-						swipeDir = touch.position - swipeStartPos;
-					}
-					break;
-				}
+			renderShotDirLine = false;
+			if( shotDirLineRenderer != null ) {
+				Destroy (shotDirLineRenderer.gameObject, 3.0f);
 			}
+			break;
 		}
 
 		if( renderShotDirLine && shotTarget!=null ) {
@@ -186,6 +114,9 @@ public class BallController : MonoBehaviour {
 		if ( takeShot  && shotTarget!=null ) {
 			InitBallLaunch();
 			CalcShotSpeedAndHeight();
+			if( match != null ) {
+				match.OnPlayerShoot();
+			}
 
 			if( enableDebugLine ) {
 				//LineRenderer ballLine = Instantiate(lineRenderer, transform.position, transform.rotation) as LineRenderer;
@@ -276,7 +207,10 @@ public class BallController : MonoBehaviour {
 
 		shotDirLineRenderer = (shotDirLineRenderer == null) ? Instantiate(lineRenderer, transform.position, Quaternion.identity) as LineRenderer: shotDirLineRenderer;
 
-		shotDirLineRenderer.SetColors(Color.cyan, Color.cyan);
+		Color col = this.GetComponent<GameplayGUI> ().currColor;
+		shotDirLineRenderer.SetColors(col, col);
+
+		//shotDirLineRenderer.SetColors(Color.cyan, Color.cyan);
 		shotDirLineRenderer.SetWidth(0.2F, 0.2F);
 		shotDirLineRenderer.SetVertexCount(2);
 		Vector3 shotDir_Line_StartPos = transform.position;
@@ -305,10 +239,14 @@ public class BallController : MonoBehaviour {
 		// gesture time == power
 		// speed = gesture time * tune factor
 		ballLaunchSpeed = gestureMagnitude * gestureTime * shotSpeedFactor;
+		string speedDebugStr;
+		speedDebugStr = "Ball Speed = " + ballLaunchSpeed;
+
 		if( ballLaunchSpeed > MAX_BALLSPEED ) {
-			Utility.DebugLog ("MaxSpeed Hit!", enableDebugText);
+			speedDebugStr += ", MaxSpeed Hit!";
 			ballLaunchSpeed = MAX_BALLSPEED;
 		}
+		Utility.DebugLog (speedDebugStr, enableDebugText);
 		
 		// determine ball shot height
 		float upForce = 1.0f;
