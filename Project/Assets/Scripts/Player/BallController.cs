@@ -52,11 +52,11 @@ public class BallController : MonoBehaviour {
 	private Camera_InputListener match_IL;
 	private SoccerBall soccerBall = null;
 	private LineRenderer shotDirLineRenderer;
-	private MatchScenario_Test match;
+	private MatchScenario match;
 
 	// Use this for initialization
 	void Start () {
-		match = GameObject.Find("MatchScenario").GetComponent<MatchScenario_Test> ();
+		match = GameObject.Find("MatchScenario").GetComponent<MatchScenario> ();
 		match_IL = GameObject.Find("GameMatch").GetComponent<Camera_InputListener> ();
 
 		shotTargetPosition = GameObject.Find("GoalPost").transform.position;

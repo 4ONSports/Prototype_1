@@ -3,11 +3,11 @@ using System.Collections;
 
 public class GoalTrigger : MonoBehaviour {
 	
-	private MatchScenario_Test match;
+	private MatchScenario match;
 	
 	void Start () {
-		match = (GameObject.Find("MatchScenario") != null)? GameObject.Find("MatchScenario").GetComponent<MatchScenario_Test> (): null;
-		Physics.IgnoreLayerCollision(9, 10);
+		match = (GameObject.Find("MatchScenario") != null)? GameObject.Find("MatchScenario").GetComponent<MatchScenario> (): null;
+		//Physics.IgnoreLayerCollision(9, 10);
 	}
 
 	void OnTriggerEnter(Collider c) {
